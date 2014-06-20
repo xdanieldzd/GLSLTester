@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5FCF1170-B589-47EE-AD1F-2C24B911C971}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GLSLTester</RootNamespace>
+    <AssemblyName>GLSLTester</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Cyotek.Windows.Forms.ColorPicker, Version=1.0.0.0, Culture=neutral, PublicKeyToken=58daa28b0b2de221, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Downloads\Cyotek.Windows.Forms.ColorPicker-master\Cyotek.Windows.Forms.ColorPicker\bin\Release\Cyotek.Windows.Forms.ColorPicker.dll</HintPath>
+    </Reference>
+    <Reference Include="FastColoredTextBox">
+      <HintPath>..\..\..\..\..\Downloads\FastColoredTextBox-master\Binary\FastColoredTextBox.dll</HintPath>
+    </Reference>
+    <Reference Include="Nini">
+      <HintPath>..\..\..\..\..\Downloads\Nini-1.1.0\Nini\Bin\DotNet\2.0\Release\Nini.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\OpenTK\1.1\Binaries\OpenTK\Release\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\OpenTK\1.1\Binaries\OpenTK\Release\OpenTK.GLControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes.cs" />
+    <Compile Include="COLLADA\ColladaDocument.cs" />
+    <Compile Include="Controls\Editors\ColorEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Editors\ColorEditor.Designer.cs">
+      <DependentUpon>ColorEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Editors\ShaderEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Editors\ShaderEditor.Designer.cs">
+      <DependentUpon>ShaderEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Editors\TextureEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Editors\TextureEditor.Designer.cs">
+      <DependentUpon>TextureEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HorizontalSeperator.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\HorizontalSeperator.Designer.cs">
+      <DependentUpon>HorizontalSeperator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Editors\IEditorControl.cs" />
+    <Compile Include="Controls\ListViewEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Editors\ObjectEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Editors\ObjectEditor.Designer.cs">
+      <DependentUpon>ObjectEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TreeNodeEx.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Forms\AddNodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddNodeForm.Designer.cs">
+      <DependentUpon>AddNodeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration.cs" />
+    <Compile Include="Forms\EditNodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EditNodeForm.Designer.cs">
+      <DependentUpon>EditNodeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GLSL.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Nodes\Color.cs" />
+    <Compile Include="Nodes\FragmentShader.cs" />
+    <Compile Include="Nodes\INode.cs" />
+    <Compile Include="Nodes\Object.cs" />
+    <Compile Include="Objects\ColladaDae.cs" />
+    <Compile Include="Rendering\Consts.cs" />
+    <Compile Include="Rendering\RenderPass.cs" />
+    <Compile Include="Rendering\RenderPassManager.cs" />
+    <Compile Include="Rendering\VertexBuffer.cs" />
+    <Compile Include="Shims\GLShims.cs" />
+    <Compile Include="Shims\ShaderShim.cs" />
+    <Compile Include="Nodes\VertexShader.cs" />
+    <Compile Include="Nodes\Texture.cs" />
+    <Compile Include="Objects\Cube.cs" />
+    <Compile Include="Objects\IRenderable.cs" />
+    <Compile Include="Objects\Quad.cs" />
+    <Compile Include="Objects\Triangle.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TreeViewEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeNodeSorter.cs" />
+    <Compile Include="VersionManagement.cs" />
+    <Compile Include="Win32.cs" />
+    <EmbeddedResource Include="Controls\Editors\ColorEditor.resx">
+      <DependentUpon>ColorEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Editors\ShaderEditor.resx">
+      <DependentUpon>ShaderEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Editors\TextureEditor.resx">
+      <DependentUpon>TextureEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\HorizontalSeperator.resx">
+      <DependentUpon>HorizontalSeperator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Editors\ObjectEditor.resx">
+      <DependentUpon>ObjectEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddNodeForm.resx">
+      <DependentUpon>AddNodeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EditNodeForm.resx">
+      <DependentUpon>EditNodeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Data\Default.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\Default.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\CelShaded.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\CelShaded.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Aglex\Aglex\Aglex.csproj">
+      <Project>{A3F8E581-B021-48CE-934F-79F070D64821}</Project>
+      <Name>Aglex</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ColorHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Web.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InsertPictureHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BringForwardHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EditCodeHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\Texture.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
