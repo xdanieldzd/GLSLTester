@@ -3,6 +3,8 @@ GLSLTester
 
 GLSL shader experimentation testbed & model viewer, written in C#.
 
+![GLSLTester](http://i.imgur.com/n9ATQ5s.png)
+
 Requirements
 ============
 
