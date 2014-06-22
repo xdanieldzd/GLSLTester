@@ -7,14 +7,15 @@ using OpenTK.Graphics.OpenGL;
 
 namespace GLSLTester.Nodes
 {
-    [DisplayOrderAttribute(0), ExecutionOrderAttribute(int.MinValue)]
+    [DisplayOrderAttribute(0), ExecutionOrderAttribute(int.MinValue), SerializableAttribute()]
     class VertexShader : Shims.ShaderShim, INode
     {
+        [NonSerialized()]
         Controls.Editors.ShaderEditor editor;
 
         public VertexShader()
         {
-            editor = new Controls.Editors.ShaderEditor() { Dock = System.Windows.Forms.DockStyle.Fill };
+            CreateEditorControl();
 
             ShaderType = OpenTK.Graphics.OpenGL.ShaderType.VertexShader;
             ShaderString = (DefaultShaderStrings = GLSL.DefaultVertexShaders)["Default"];
@@ -27,6 +28,8 @@ namespace GLSLTester.Nodes
         public string GetDescription() { return "GLSL vertex shader"; }
         public string GetIconKey() { return "EditCodeHS"; }
         public string GetNodeInstanceName() { return string.Empty; }
+
+        public void CreateEditorControl() { editor = new Controls.Editors.ShaderEditor() { Dock = System.Windows.Forms.DockStyle.Fill }; }
         public Controls.Editors.IEditorControl GetEditorControl() { return editor; }
 
         public void Execute()

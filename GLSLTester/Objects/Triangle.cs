@@ -7,7 +7,7 @@ using Aglex;
 
 namespace GLSLTester.Objects
 {
-    [System.ComponentModel.Description("Basic Triangle"), DisplayOrderAttribute(0)]
+    [System.ComponentModel.Description("Basic Triangle"), DisplayOrderAttribute(0), Serializable()]
     class Triangle : IRenderable
     {
         public virtual Vertex[] VertexData
@@ -28,9 +28,15 @@ namespace GLSLTester.Objects
             get { return new uint[] { 0, 1, 2 }; }
         }
 
+        [NonSerialized()]
         internal VertexBuffer vertexBuffer;
 
         public Triangle()
+        {
+            Initialize();
+        }
+
+        internal void Initialize()
         {
             vertexBuffer = new VertexBuffer();
             vertexBuffer.SetPrimitiveType(OpenTK.Graphics.OpenGL.PrimitiveType.Triangles);
@@ -48,6 +54,8 @@ namespace GLSLTester.Objects
 
         public virtual void Render()
         {
+            if (vertexBuffer == null) Initialize();
+
             vertexBuffer.Render(GLSL.ShaderProgramID);
         }
     }

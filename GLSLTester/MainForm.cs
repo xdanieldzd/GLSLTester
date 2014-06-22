@@ -34,6 +34,8 @@ namespace GLSLTester
             treeViewEx1.TreeViewNodeSorter = new WorkspaceTreeNodeSorter();
 
             this.Text = string.Format("{0} {1}", Application.ProductName, VersionManagement.CreateVersionString(Application.ProductVersion));
+
+            ofdOpenWorkspace.Filter = sfdSaveWorkspace.Filter = string.Format("{0} Workspace Files (*.gtw)|*.gtw|All Files (*.*)|*.*", Application.ProductName);
         }
 
         private void glControl1_Load(object sender, EventArgs e)
@@ -200,6 +202,15 @@ namespace GLSLTester
             }
         }
 
+        private void UpdateShaders()
+        {
+            Nodes.VertexShader vertexShaderNode = (knownNodes.FirstOrDefault(x => x is Nodes.VertexShader) as Nodes.VertexShader);
+            Nodes.FragmentShader fragmentShaderNode = (knownNodes.FirstOrDefault(x => x is Nodes.FragmentShader) as Nodes.FragmentShader);
+
+            if (vertexShaderNode != null) GLSL.CompileShader(vertexShaderNode.ShaderType, vertexShaderNode.ShaderString);
+            if (fragmentShaderNode != null) GLSL.CompileShader(fragmentShaderNode.ShaderType, fragmentShaderNode.ShaderString);
+        }
+
         private void addNodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Forms.AddNodeForm anf = new Forms.AddNodeForm(knownNodes);
@@ -222,11 +233,7 @@ namespace GLSLTester
 
             UpdateKnownNodesList();
 
-            Nodes.VertexShader vertexShaderNode = (knownNodes.FirstOrDefault(x => x is Nodes.VertexShader) as Nodes.VertexShader);
-            Nodes.FragmentShader fragmentShaderNode = (knownNodes.FirstOrDefault(x => x is Nodes.FragmentShader) as Nodes.FragmentShader);
-
-            if (vertexShaderNode != null) GLSL.CompileShader(vertexShaderNode.ShaderType, vertexShaderNode.ShaderString);
-            if (fragmentShaderNode != null) GLSL.CompileShader(fragmentShaderNode.ShaderType, fragmentShaderNode.ShaderString);
+            UpdateShaders();
         }
 
         private void EditUniformNode()
@@ -254,6 +261,34 @@ namespace GLSLTester
         private void treeViewEx1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             EditUniformNode();
+        }
+
+        private void saveWorkspaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sfdSaveWorkspace.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Serialization.Export<List<Nodes.INode>>(knownNodes, sfdSaveWorkspace.FileName);
+            }
+        }
+
+        private void openWorkspaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ofdOpenWorkspace.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                List<Nodes.INode> loadedNodes = Serialization.Import<List<Nodes.INode>>(ofdOpenWorkspace.FileName);
+
+                RemoveAllNodes();
+                foreach (Nodes.INode node in loadedNodes)
+                {
+                    if (node.GetEditorControl() == null) node.CreateEditorControl();
+                    AddNewNode(node);
+                }
+
+                workspaceRoot.Expand();
+                UpdateKnownNodesList();
+
+                UpdateShaders();
+            }
         }
     }
 }

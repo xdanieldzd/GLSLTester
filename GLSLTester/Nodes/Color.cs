@@ -7,11 +7,13 @@ using OpenTK.Graphics.OpenGL;
 
 namespace GLSLTester.Nodes
 {
-    [DisplayOrderAttribute(4), ExecutionOrderAttribute(0)]
+    [DisplayOrderAttribute(4), ExecutionOrderAttribute(0), Serializable()]
     class Color : INode
     {
-        string defaultName;
+        [NonSerialized()]
         Controls.Editors.ColorEditor editor;
+
+        string defaultName;
         int number;
 
         public string NodeName { get; set; }
@@ -19,10 +21,11 @@ namespace GLSLTester.Nodes
 
         public Color()
         {
-            defaultName = "colorUniform";
-            editor = new Controls.Editors.ColorEditor() { Dock = System.Windows.Forms.DockStyle.Fill };
+            CreateEditorControl();
 
+            defaultName = "colorUniform";
             AutoSetNodeName(number = 0);
+
             ColorValue = System.Drawing.Color.White;
         }
 
@@ -31,6 +34,8 @@ namespace GLSLTester.Nodes
         public string GetDescription() { return "Color (vec4) uniform node\nDefine in shader via \"uniform vec4 <NodeName>;\""; }
         public string GetIconKey() { return "ColorHS"; }
         public string GetNodeInstanceName() { return NodeName; }
+
+        public void CreateEditorControl() { editor = new Controls.Editors.ColorEditor() { Dock = System.Windows.Forms.DockStyle.Fill }; }
         public Controls.Editors.IEditorControl GetEditorControl() { return editor; }
 
         public void Execute()

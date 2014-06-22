@@ -7,7 +7,7 @@ using Aglex;
 
 namespace GLSLTester.Objects
 {
-    [System.ComponentModel.Description("Basic Cube"), DisplayOrderAttribute(2)]
+    [System.ComponentModel.Description("Basic Cube"), DisplayOrderAttribute(2), Serializable()]
     class Cube : Triangle, IRenderable
     {
         public override Vertex[] VertexData

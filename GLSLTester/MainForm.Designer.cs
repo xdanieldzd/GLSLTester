@@ -54,6 +54,8 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.editNodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeViewEx1 = new GLSLTester.Controls.TreeViewEx();
+            this.ofdOpenWorkspace = new System.Windows.Forms.OpenFileDialog();
+            this.sfdSaveWorkspace = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.cmsNodeMenu.SuspendLayout();
@@ -103,6 +105,7 @@
             this.openWorkspaceToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openWorkspaceToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.openWorkspaceToolStripMenuItem.Text = "&Open Workspace";
+            this.openWorkspaceToolStripMenuItem.Click += new System.EventHandler(this.openWorkspaceToolStripMenuItem_Click);
             // 
             // saveWorkspaceToolStripMenuItem
             // 
@@ -110,6 +113,7 @@
             this.saveWorkspaceToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveWorkspaceToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.saveWorkspaceToolStripMenuItem.Text = "&Save Workspace...";
+            this.saveWorkspaceToolStripMenuItem.Click += new System.EventHandler(this.saveWorkspaceToolStripMenuItem_Click);
             // 
             // toolStripMenuItem3
             // 
@@ -311,6 +315,8 @@
         private System.Windows.Forms.ToolStripMenuItem openWorkspaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem vSyncToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog ofdOpenWorkspace;
+        private System.Windows.Forms.SaveFileDialog sfdSaveWorkspace;
 
     }
 }

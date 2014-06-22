@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GLSLTester.Controls.Editors
 {
-    internal interface IEditorControl
+    public interface IEditorControl
     {
         void Initialize(Nodes.INode parentNode, List<Nodes.INode> knownNodes);
     }

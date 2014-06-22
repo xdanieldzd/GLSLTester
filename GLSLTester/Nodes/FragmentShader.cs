@@ -7,14 +7,15 @@ using OpenTK.Graphics.OpenGL;
 
 namespace GLSLTester.Nodes
 {
-    [DisplayOrderAttribute(1), ExecutionOrderAttribute(int.MinValue), IsNextSeparatorAttribute(true)]
+    [DisplayOrderAttribute(1), ExecutionOrderAttribute(int.MinValue), IsNextSeparatorAttribute(true), Serializable()]
     class FragmentShader : Shims.ShaderShim, INode
     {
+        [NonSerialized()]
         Controls.Editors.ShaderEditor editor;
 
         public FragmentShader()
         {
-            editor = new Controls.Editors.ShaderEditor() { Dock = System.Windows.Forms.DockStyle.Fill };
+            CreateEditorControl();
 
             ShaderType = OpenTK.Graphics.OpenGL.ShaderType.FragmentShader;
             ShaderString = (DefaultShaderStrings = GLSL.DefaultFragmentShaders)["Default"];
@@ -27,6 +28,8 @@ namespace GLSLTester.Nodes
         public string GetDescription() { return "GLSL fragment shader"; }
         public string GetIconKey() { return "EditCodeHS"; }
         public string GetNodeInstanceName() { return string.Empty; }
+
+        public void CreateEditorControl() { editor = new Controls.Editors.ShaderEditor() { Dock = System.Windows.Forms.DockStyle.Fill }; }
         public Controls.Editors.IEditorControl GetEditorControl() { return editor; }
 
         public void Execute()

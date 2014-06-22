@@ -127,6 +127,7 @@
     <Compile Include="Nodes\INode.cs" />
     <Compile Include="Nodes\Object.cs" />
     <Compile Include="Objects\ColladaDae.cs" />
+    <Compile Include="Serialization.cs" />
     <Compile Include="Shims\ShaderShim.cs" />
     <Compile Include="Nodes\VertexShader.cs" />
     <Compile Include="Nodes\Texture.cs" />
@@ -144,7 +145,7 @@
     <Compile Include="Controls\TreeViewEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TreeNodeSorter.cs" />
+    <Compile Include="WorkspaceTreeNodeSorter.cs" />
     <Compile Include="VersionManagement.cs" />
     <Compile Include="Win32.cs" />
     <EmbeddedResource Include="Controls\Editors\ColorEditor.resx">

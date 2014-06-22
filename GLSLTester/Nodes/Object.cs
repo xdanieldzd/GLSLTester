@@ -8,11 +8,13 @@ using OpenTK.Graphics.OpenGL;
 
 namespace GLSLTester.Nodes
 {
-    [DisplayOrderAttribute(2), ExecutionOrderAttribute(int.MaxValue)]
+    [DisplayOrderAttribute(2), ExecutionOrderAttribute(int.MaxValue), Serializable()]
     class Object : INode
     {
-        string defaultName;
+        [NonSerialized()]
         Controls.Editors.ObjectEditor editor;
+
+        string defaultName;
         int number;
 
         public string NodeName { get; set; }
@@ -23,10 +25,11 @@ namespace GLSLTester.Nodes
 
         public Object()
         {
-            defaultName = "objectName";
-            editor = new Controls.Editors.ObjectEditor() { Dock = System.Windows.Forms.DockStyle.Fill };
+            CreateEditorControl();
 
+            defaultName = "objectName";
             AutoSetNodeName(number = 0);
+
             RenderableObject = (Objects.IRenderable)Activator.CreateInstance(typeof(Objects.Cube), null);
             Rotation = new double[3] { 0.0, 0.0, 0.0 };
             AutoRotate = new bool[3] { false, true, false };
@@ -38,6 +41,8 @@ namespace GLSLTester.Nodes
         public string GetDescription() { return "3D object node\nRendered automatically; can also rotate automatically"; }
         public string GetIconKey() { return "BringForwardHS"; }
         public string GetNodeInstanceName() { return NodeName; }
+
+        public void CreateEditorControl() { editor = new Controls.Editors.ObjectEditor() { Dock = System.Windows.Forms.DockStyle.Fill }; }
         public Controls.Editors.IEditorControl GetEditorControl() { return editor; }
 
         public void Execute()
