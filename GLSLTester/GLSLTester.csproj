@@ -127,11 +127,6 @@
     <Compile Include="Nodes\INode.cs" />
     <Compile Include="Nodes\Object.cs" />
     <Compile Include="Objects\ColladaDae.cs" />
-    <Compile Include="Rendering\Consts.cs" />
-    <Compile Include="Rendering\RenderPass.cs" />
-    <Compile Include="Rendering\RenderPassManager.cs" />
-    <Compile Include="Rendering\VertexBuffer.cs" />
-    <Compile Include="Shims\GLShims.cs" />
     <Compile Include="Shims\ShaderShim.cs" />
     <Compile Include="Nodes\VertexShader.cs" />
     <Compile Include="Nodes\Texture.cs" />

@@ -20,7 +20,7 @@ namespace GLSLTester.Nodes
         public string TexturePath { get; set; }
         public int TextureUnit { get; set; }
 
-        int oglTextureId;
+        Aglex.Texture texture;
 
         public Texture()
         {
@@ -45,20 +45,19 @@ namespace GLSLTester.Nodes
 
         internal void LoadTexture()
         {
-            oglTextureId = Shims.GLShims.LoadTexture(TexturePath, TextureUnit);
+            texture = new Aglex.Texture(TexturePath);
         }
 
         public void Execute()
         {
             GL.Enable(EnableCap.Texture2D);
-            GL.ActiveTexture(OpenTK.Graphics.OpenGL.TextureUnit.Texture0 + TextureUnit);
-            GL.BindTexture(TextureTarget.Texture2D, oglTextureId);
+            texture.Bind(OpenTK.Graphics.OpenGL.TextureUnit.Texture0 + TextureUnit);
             GL.Uniform1(GL.GetUniformLocation(GLSL.ShaderProgramID, NodeName), TextureUnit);
         }
 
         public void Dispose()
         {
-            if (GL.IsTexture(oglTextureId)) GL.DeleteTexture(oglTextureId);
+            texture.Dispose();
         }
     }
 }

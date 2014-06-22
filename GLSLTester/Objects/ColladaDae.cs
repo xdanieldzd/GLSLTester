@@ -5,7 +5,7 @@ using System.Text;
 
 using OpenTK.Graphics.OpenGL;
 
-using GLSLTester.Rendering;
+using Aglex;
 
 namespace GLSLTester.Objects
 {
@@ -13,7 +13,7 @@ namespace GLSLTester.Objects
     class ColladaDae : IRenderable
     {
         COLLADA.Document document;
-        Dictionary<string, int> textureMaps;
+        Dictionary<string, Texture> textureMaps;
 
         List<MaterialShim> materialShims;
         List<GeometryShim> geometryShims;
@@ -22,11 +22,11 @@ namespace GLSLTester.Objects
         {
             document = new COLLADA.Document(path);
 
-            textureMaps = new Dictionary<string, int>();
+            textureMaps = new Dictionary<string, Texture>();
             for (int i = 0; i < document.images.Count; i++)
             {
                 string texPath = document.images[i].init_from.Uri.LocalPath;
-                textureMaps[document.images[i].name] = Shims.GLShims.LoadTexture(texPath, 0);
+                textureMaps[document.images[i].name] = new Texture(texPath);
             }
 
             materialShims = new List<MaterialShim>();
@@ -38,10 +38,8 @@ namespace GLSLTester.Objects
 
         public void Dispose()
         {
-            foreach (KeyValuePair<string, int> texture in textureMaps)
-            {
-                if (GL.IsTexture(texture.Value)) GL.DeleteTexture(texture.Value);
-            }
+            foreach (KeyValuePair<string, Texture> texture in textureMaps)
+                texture.Value.Dispose();
 
             foreach (GeometryShim geometry in geometryShims)
                 foreach (PrimitiveShim primitive in geometry.Primitives)
@@ -58,12 +56,10 @@ namespace GLSLTester.Objects
                 {
                     if (primitive == null) continue;
 
-                    string texname = materialShims.FirstOrDefault(x => primitive.PrimitiveRaw.material.Contains(x.MaterialRaw.id)).TextureName;
-                    int texid = textureMaps[texname];
+                    MaterialShim material = materialShims.FirstOrDefault(x => primitive.PrimitiveRaw.material.Contains(x.MaterialRaw.id));
+                    if (material != null) textureMaps[material.TextureName].Bind();
 
-                    GL.BindTexture(TextureTarget.Texture2D, texid);
-
-                    primitive.VertexBuffer.Render();
+                    primitive.VertexBuffer.Render(GLSL.ShaderProgramID);
                 }
             }
         }
@@ -169,8 +165,8 @@ namespace GLSLTester.Objects
                     VertexBuffer.SetVertexData(vertices);
                     VertexBuffer.SetIndexData(indices);
 
-                    VertexBuffer.SetRenderPass(0, Rendering.RenderPass.RenderBackFace);
-                    VertexBuffer.SetRenderPass(1, Rendering.RenderPass.Default);
+                    VertexBuffer.SetRenderPass(0, RenderPass.RenderBackFace);
+                    VertexBuffer.SetRenderPass(1, RenderPass.Default);
                 }
             }
 

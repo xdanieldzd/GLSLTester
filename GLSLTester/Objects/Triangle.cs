@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using OpenTK.Graphics.OpenGL;
+using Aglex;
 
 namespace GLSLTester.Objects
 {
     [System.ComponentModel.Description("Basic Triangle"), DisplayOrderAttribute(0)]
     class Triangle : IRenderable
     {
-        public virtual Rendering.Vertex[] VertexData
+        public virtual Vertex[] VertexData
         {
             get
             {
-                return new Rendering.Vertex[]
+                return new Vertex[]
                 {
-                    new Rendering.Vertex(new OpenTK.Vector3(0.0f, 50.0f, 0.0f), new OpenTK.Vector2(1.0f, 0.0f), new OpenTK.Graphics.Color4(1.0f, 0.0f, 0.0f, 1.0f), new OpenTK.Vector3(0.0f, 1.0f, 0.0f)),
-                    new Rendering.Vertex(new OpenTK.Vector3(-50.0f, -50.0f, 0.0f), new OpenTK.Vector2(0.0f, 1.0f), new OpenTK.Graphics.Color4(0.0f, 1.0f, 0.0f, 1.0f), new OpenTK.Vector3(-1.0f, -1.0f, 0.0f)),
-                    new Rendering.Vertex(new OpenTK.Vector3(50.0f, -50.0f, 0.0f), new OpenTK.Vector2(1.0f, 1.0f), new OpenTK.Graphics.Color4(0.0f, 0.0f, 1.0f, 1.0f), new OpenTK.Vector3(1.0f, -1.0f, 0.0f)),
+                    new Vertex(new OpenTK.Vector3(0.0f, 50.0f, 0.0f), new OpenTK.Vector2(1.0f, 0.0f), new OpenTK.Graphics.Color4(1.0f, 0.0f, 0.0f, 1.0f), new OpenTK.Vector3(0.0f, 1.0f, 0.0f)),
+                    new Vertex(new OpenTK.Vector3(-50.0f, -50.0f, 0.0f), new OpenTK.Vector2(0.0f, 1.0f), new OpenTK.Graphics.Color4(0.0f, 1.0f, 0.0f, 1.0f), new OpenTK.Vector3(-1.0f, -1.0f, 0.0f)),
+                    new Vertex(new OpenTK.Vector3(50.0f, -50.0f, 0.0f), new OpenTK.Vector2(1.0f, 1.0f), new OpenTK.Graphics.Color4(0.0f, 0.0f, 1.0f, 1.0f), new OpenTK.Vector3(1.0f, -1.0f, 0.0f)),
                 };
             }
         }
@@ -28,17 +28,17 @@ namespace GLSLTester.Objects
             get { return new uint[] { 0, 1, 2 }; }
         }
 
-        internal Rendering.VertexBuffer vertexBuffer;
+        internal VertexBuffer vertexBuffer;
 
         public Triangle()
         {
-            vertexBuffer = new Rendering.VertexBuffer();
-            vertexBuffer.SetPrimitiveType(PrimitiveType.Triangles);
+            vertexBuffer = new VertexBuffer();
+            vertexBuffer.SetPrimitiveType(OpenTK.Graphics.OpenGL.PrimitiveType.Triangles);
             vertexBuffer.SetVertexData(this.VertexData);
             vertexBuffer.SetIndexData(this.Indices);
 
-            vertexBuffer.SetRenderPass(0, Rendering.RenderPass.RenderBackFace);
-            vertexBuffer.SetRenderPass(1, Rendering.RenderPass.Default);
+            vertexBuffer.SetRenderPass(0, Aglex.RenderPass.RenderBackFace);
+            vertexBuffer.SetRenderPass(1, Aglex.RenderPass.Default);
         }
 
         public void Dispose()
@@ -48,7 +48,7 @@ namespace GLSLTester.Objects
 
         public virtual void Render()
         {
-            vertexBuffer.Render();
+            vertexBuffer.Render(GLSL.ShaderProgramID);
         }
     }
 }

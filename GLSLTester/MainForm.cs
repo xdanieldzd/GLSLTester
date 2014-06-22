@@ -46,10 +46,6 @@ namespace GLSLTester
 
             glControl1.SetLightPosition(new float[] { -5.0f, 5.0f, 5.0f, 0.0f });
 
-            GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { 0.25f, 0.25f, 0.25f, 1.0f });
-            GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 0.75f, 0.75f, 0.75f, 1.0f });
-            GL.Light(LightName.Light0, LightParameter.Specular, new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
-
             //TEST
             //Objects.ColladaDae tmp1 = new ColladaDae(@"E:\Dokumente und Einstellungen\Daniel\Eigene Dateien\aero_model\aero_test.dae");
             //Objects.ColladaDae tmp2 = new ColladaDae(@"E:\- 3DS OoT Hacking -\collada\mjin_okarina_model.dae");
@@ -162,7 +158,7 @@ namespace GLSLTester
 
             if (e.Button == MouseButtons.Right)
             {
-                if (treeView.SelectedNode != null/* && treeView.SelectedNode.Bounds.Contains(point)*/)
+                if (treeView.SelectedNode != null)
                 {
                     addNodeToolStripMenuItem.Enabled = (treeView.SelectedNode.Parent == null);
                     editNodeToolStripMenuItem.Enabled = removeNodeToolStripMenuItem.Enabled = (treeView.SelectedNode.Tag != null);
