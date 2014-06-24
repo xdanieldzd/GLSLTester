@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
+using System.Reflection;
 
 namespace GLSLTester
 {
@@ -18,6 +19,25 @@ namespace GLSLTester
             fileDialog.Filter = string.Format("{0}|Image Files ({1})|{1}|All Files (*.*)|*.*", string.Join("|", separateFilters), imageExtensions.ToLowerInvariant());
             if (defaultExtension != null) fileDialog.FilterIndex = (codecs.IndexOf(codecs.FirstOrDefault(x => x.FormatDescription.ToLowerInvariant().Contains(defaultExtension.ToLowerInvariant()))) + 1);
             else fileDialog.FilterIndex = (codecs.Count + 1);
+        }
+
+        public static T Clone<T>(this T originalObject)
+        {
+            T newObject = (T)Activator.CreateInstance(originalObject.GetType());
+
+            FieldInfo[] fields = originalObject.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Concat(originalObject.GetType().BaseType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)).ToArray();
+
+            foreach (FieldInfo field in fields)
+            {
+                object value = field.GetValue(originalObject);
+                if (field.FieldType.Namespace != originalObject.GetType().Namespace)
+                    field.SetValue(newObject, value);
+                else
+                    field.SetValue(newObject, Clone(value));
+            }
+
+            return newObject;
         }
     }
 }

@@ -12,6 +12,7 @@ namespace GLSLTester.Controls.Editors
     internal partial class TextureEditor : UserControl, IEditorControl
     {
         Nodes.Texture parentNode;
+        Nodes.Texture originalNode;
         List<Nodes.INode> knownNodes;
 
         public TextureEditor()
@@ -22,6 +23,7 @@ namespace GLSLTester.Controls.Editors
         public void Initialize(Nodes.INode parentNode, List<Nodes.INode> knownNodes)
         {
             this.parentNode = parentNode as Nodes.Texture;
+            this.originalNode = this.parentNode.Clone<Nodes.Texture>();
             this.knownNodes = knownNodes;
 
             this.ofdTexture.SetCommonImageFilter("png");
@@ -72,12 +74,10 @@ namespace GLSLTester.Controls.Editors
 
         private bool AreEditsValid()
         {
-            bool result = true;
-            bool invalidName = (knownNodes == null ? false : (knownNodes.FirstOrDefault(x => x.GetNodeInstanceName() == this.parentNode.NodeName && x.GetHashCode() != this.parentNode.GetHashCode()) != null));
-            bool textureNotFound = !System.IO.File.Exists(this.parentNode.TexturePath);
+            if (knownNodes == null) return true;
 
-            this.txtTexturePath.ForeColor = this.txtNodeName.ForeColor = SystemColors.WindowText;
-            this.errorProvider.Clear();
+            bool invalidName = (knownNodes.FirstOrDefault(x => x.GetNodeInstanceName() == this.originalNode.NodeName && x.GetGuid() != this.originalNode.GetGuid()) != null);
+            bool textureNotFound = !System.IO.File.Exists(this.parentNode.TexturePath);
 
             if (invalidName)
             {
@@ -85,7 +85,7 @@ namespace GLSLTester.Controls.Editors
                 this.errorProvider.SetIconPadding(this.txtNodeName, -(this.errorProvider.Icon.Width + this.txtNodeName.Bounds.Width - this.txtNodeName.ClientRectangle.Width));
                 this.errorProvider.SetError(this.txtNodeName, "The entered node name is already in use.");
 
-                result = false;
+                return false;
             }
 
             if (textureNotFound)
@@ -94,10 +94,13 @@ namespace GLSLTester.Controls.Editors
                 this.errorProvider.SetIconPadding(this.txtTexturePath, -(this.errorProvider.Icon.Width + this.txtTexturePath.Bounds.Width - this.txtTexturePath.ClientRectangle.Width));
                 this.errorProvider.SetError(this.txtTexturePath, "The selected texture file does not exist.");
 
-                result = false;
+                return false;
             }
 
-            return result;
+            this.txtTexturePath.ForeColor = this.txtNodeName.ForeColor = SystemColors.WindowText;
+            this.errorProvider.Clear();
+
+            return true;
         }
 
         private void TextureEditor_Validating(object sender, CancelEventArgs e)

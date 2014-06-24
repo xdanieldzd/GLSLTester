@@ -18,9 +18,7 @@ namespace GLSLTester
 {
     public partial class MainForm : Form
     {
-        TreeNode workspaceRoot;
-
-        List<Nodes.INode> knownNodes;
+        Workspace currentWorkspace;
 
         public MainForm()
         {
@@ -29,13 +27,12 @@ namespace GLSLTester
             glControl1.BackColor = Configuration.BackgroundColor;
             glControl1.VSync = vSyncToolStripMenuItem.Checked = Configuration.VSync;
 
-            treeViewEx1.Nodes.Add(workspaceRoot = new TreeNode("Workspace Root") { ImageKey = "Web", SelectedImageKey = "Web" });
             treeViewEx1.ImageList = Program.NodeImageList;
             treeViewEx1.TreeViewNodeSorter = new WorkspaceTreeNodeSorter();
 
             this.Text = string.Format("{0} {1}", Application.ProductName, VersionManagement.CreateVersionString(Application.ProductVersion));
 
-            ofdOpenWorkspace.Filter = sfdSaveWorkspace.Filter = string.Format("{0} Workspace Files (*.gtw)|*.gtw|All Files (*.*)|*.*", Application.ProductName);
+            ofdOpenWorkspace.Filter = sfdSaveWorkspace.Filter = string.Format("{0} Workspace Files (*.xml)|*.xml|All Files (*.*)|*.*", Application.ProductName);
         }
 
         private void glControl1_Load(object sender, EventArgs e)
@@ -65,17 +62,7 @@ namespace GLSLTester
             GL.Translate(0.0, 0.0, -250.0);
             //GL.Scale(0.075, 0.075, 0.075);                          //TEST
 
-            if (knownNodes != null)
-            {
-                foreach (var node in knownNodes.Select(x => new
-                    {
-                        Property = x,
-                        Attribute = (ExecutionOrderAttribute)Attribute.GetCustomAttribute(x.GetType(), typeof(ExecutionOrderAttribute))
-                    }).OrderBy(y => y.Attribute.Order))
-                {
-                    node.Property.Execute();
-                }
-            }
+            if (currentWorkspace != null) currentWorkspace.ExecuteNodes();
 
             GL.PopMatrix();
 
@@ -88,15 +75,13 @@ namespace GLSLTester
 
         private void newWorkspaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RemoveAllNodes();
+            if (currentWorkspace != null)
+            {
+                treeViewEx1.Nodes.Clear();
+            }
 
-            AddNewNode(new Nodes.VertexShader());
-            AddNewNode(new Nodes.FragmentShader());
-            AddNewNode(new Nodes.Object());
-            AddNewNode(new Nodes.Texture());
-
-            workspaceRoot.Expand();
-            UpdateKnownNodesList();
+            currentWorkspace = new Workspace(treeViewEx1);
+            currentWorkspace.CreateDefault();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -169,86 +154,33 @@ namespace GLSLTester
             }
         }
 
-        private void UpdateKnownNodesList()
-        {
-            knownNodes = new List<Nodes.INode>();
-            foreach (TreeNode treeNode in workspaceRoot.Nodes)
-                if (treeNode.Tag != null && treeNode.Tag is Nodes.INode) knownNodes.Add(treeNode.Tag as Nodes.INode);
-
-            treeViewEx1.Sort();
-        }
-
-        private void AddNewNode(Nodes.INode node)
-        {
-            workspaceRoot.Nodes.Add(new TreeNode()
-            {
-                Text = (node.GetNodeInstanceName() != string.Empty ? string.Format("{0} [{1}]", node.GetNodeTypeName(), node.GetNodeInstanceName()) : node.GetNodeTypeName()),
-                Tag = node,
-                ImageKey = node.GetIconKey(),
-                SelectedImageKey = node.GetIconKey()
-            });
-        }
-
-        private void RemoveAllNodes()
-        {
-            List<TreeNode> toRemove = workspaceRoot.Nodes.Cast<TreeNode>().Where(x => x.Tag != null && x.Tag is Nodes.INode).ToList();
-            foreach (TreeNode treeNode in toRemove)
-            {
-                if (treeNode.Tag != null && treeNode.Tag is Nodes.INode)
-                {
-                    (treeNode.Tag as Nodes.INode).Dispose();
-                    workspaceRoot.Nodes.Remove(treeNode);
-                }
-            }
-        }
-
-        private void UpdateShaders()
-        {
-            Nodes.VertexShader vertexShaderNode = (knownNodes.FirstOrDefault(x => x is Nodes.VertexShader) as Nodes.VertexShader);
-            Nodes.FragmentShader fragmentShaderNode = (knownNodes.FirstOrDefault(x => x is Nodes.FragmentShader) as Nodes.FragmentShader);
-
-            if (vertexShaderNode != null) GLSL.CompileShader(vertexShaderNode.ShaderType, vertexShaderNode.ShaderString);
-            if (fragmentShaderNode != null) GLSL.CompileShader(fragmentShaderNode.ShaderType, fragmentShaderNode.ShaderString);
-        }
-
         private void addNodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Forms.AddNodeForm anf = new Forms.AddNodeForm(knownNodes);
+            Forms.AddNodeForm anf = new Forms.AddNodeForm(currentWorkspace.KnownNodes);
 
             if (anf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                AddNewNode(anf.NewNode);
-                workspaceRoot.Expand();
-                UpdateKnownNodesList();
+                currentWorkspace.KnownNodes.Add(anf.NewNode);
             }
         }
 
         private void removeNodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TreeNode treeNode = treeViewEx1.SelectedNode;
-
-            if (treeNode.Tag != null && treeNode.Tag is Nodes.INode) (treeNode.Tag as Nodes.INode).Dispose();
-
-            treeNode.Remove();
-
-            UpdateKnownNodesList();
-
-            UpdateShaders();
+            if (treeNode.Tag != null && treeNode.Tag is Nodes.INode) currentWorkspace.KnownNodes.Remove(treeNode.Tag as Nodes.INode);
         }
 
         private void EditUniformNode()
         {
             if (treeViewEx1.SelectedNode.Tag != null && treeViewEx1.SelectedNode.Tag is Nodes.INode)
             {
-                Forms.EditNodeForm enf = new Forms.EditNodeForm(knownNodes, treeViewEx1.SelectedNode.Tag as Nodes.INode);
+                Nodes.INode node = (treeViewEx1.SelectedNode.Tag as Nodes.INode);
+
+                Forms.EditNodeForm enf = new Forms.EditNodeForm(currentWorkspace.KnownNodes, node);
+
                 if (enf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    treeViewEx1.SelectedNode.Tag = enf.EditNode;
-
-                    treeViewEx1.SelectedNode.Text =
-                        (enf.EditNode.GetNodeInstanceName() != string.Empty ? string.Format("{0} [{1}]", enf.EditNode.GetNodeTypeName(), enf.EditNode.GetNodeInstanceName()) : enf.EditNode.GetNodeTypeName());
-
-                    UpdateKnownNodesList();
+                    currentWorkspace.KnownNodes.Replace(node, enf.EditNode);
                 }
             }
         }
@@ -267,7 +199,7 @@ namespace GLSLTester
         {
             if (sfdSaveWorkspace.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Serialization.Export<List<Nodes.INode>>(knownNodes, sfdSaveWorkspace.FileName);
+                currentWorkspace.Save(sfdSaveWorkspace.FileName);
             }
         }
 
@@ -275,19 +207,8 @@ namespace GLSLTester
         {
             if (ofdOpenWorkspace.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                List<Nodes.INode> loadedNodes = Serialization.Import<List<Nodes.INode>>(ofdOpenWorkspace.FileName);
-
-                RemoveAllNodes();
-                foreach (Nodes.INode node in loadedNodes)
-                {
-                    if (node.GetEditorControl() == null) node.CreateEditorControl();
-                    AddNewNode(node);
-                }
-
-                workspaceRoot.Expand();
-                UpdateKnownNodesList();
-
-                UpdateShaders();
+                if (currentWorkspace != null) currentWorkspace.Dispose();
+                currentWorkspace = new Workspace(treeViewEx1, ofdOpenWorkspace.FileName);
             }
         }
     }

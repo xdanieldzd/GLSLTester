@@ -16,11 +16,18 @@ namespace GLSLTester.Nodes
 
         string defaultName;
         int number;
+        Guid guid;
 
         public string NodeName { get; set; }
         public Objects.IRenderable RenderableObject { get; set; }
-        public double[] Rotation { get; set; }
-        public bool[] AutoRotate { get; set; }
+
+        public double RotationX { get; set; }
+        public double RotationY { get; set; }
+        public double RotationZ { get; set; }
+        public bool AutoRotateX { get; set; }
+        public bool AutoRotateY { get; set; }
+        public bool AutoRotateZ { get; set; }
+
         public string ObjectPath { get; set; }
 
         public Object()
@@ -30,11 +37,45 @@ namespace GLSLTester.Nodes
             defaultName = "objectName";
             AutoSetNodeName(number = 0);
 
+            guid = Guid.NewGuid();
+
             RenderableObject = (Objects.IRenderable)Activator.CreateInstance(typeof(Objects.Cube), null);
-            Rotation = new double[3] { 0.0, 0.0, 0.0 };
-            AutoRotate = new bool[3] { false, true, false };
+
+            RotationX = RotationY = RotationZ = 0.0;
+            AutoRotateX = false;
+            AutoRotateY = true;
+            AutoRotateZ = false;
+
             ObjectPath = string.Empty;
         }
+
+        public Object(System.Xml.XmlElement element)
+        {
+            CreateEditorControl();
+
+            defaultName = "objectName";
+            number = int.Parse(element.GetAttribute("Number"));
+            NodeName = element.GetAttribute("NodeName");
+            guid = Guid.Parse(element.GetAttribute("Guid"));
+
+            ObjectPath = element.GetAttribute("ObjectPath");
+
+            RotationX = double.Parse(element.GetAttribute("RotationX"));
+            RotationY = double.Parse(element.GetAttribute("RotationY"));
+            RotationZ = double.Parse(element.GetAttribute("RotationZ"));
+            AutoRotateX = bool.Parse(element.GetAttribute("AutoRotateX"));
+            AutoRotateY = bool.Parse(element.GetAttribute("AutoRotateY"));
+            AutoRotateZ = bool.Parse(element.GetAttribute("AutoRotateZ"));
+
+            Type objectType = Type.GetType(element.GetAttribute("RenderableObject"));
+            RequiresPathAttribute reqPathAttrib = (RequiresPathAttribute)Attribute.GetCustomAttribute(objectType, typeof(RequiresPathAttribute));
+            if (reqPathAttrib != null && reqPathAttrib.Value == true)
+                RenderableObject = (Objects.IRenderable)Activator.CreateInstance(objectType, new object[] { ObjectPath });
+            else
+                RenderableObject = (Objects.IRenderable)Activator.CreateInstance(objectType, null);
+        }
+
+        public Guid GetGuid() { return guid; }
 
         public void AutoSetNodeName(int number) { this.number = number; NodeName = string.Format("{0}{1}", defaultName, this.number); }
         public string GetNodeTypeName() { return "3D Object"; }
@@ -51,13 +92,35 @@ namespace GLSLTester.Nodes
 
             double rotationIncrement = (Program.Elapsed / 60000.0);
 
-            if (AutoRotate[0]) GL.Rotate(Rotation[0] += rotationIncrement, OpenTK.Vector3d.UnitX);
-            if (AutoRotate[1]) GL.Rotate(Rotation[1] += rotationIncrement, OpenTK.Vector3d.UnitY);
-            if (AutoRotate[2]) GL.Rotate(Rotation[2] += rotationIncrement, OpenTK.Vector3d.UnitZ);
+            if (AutoRotateX) GL.Rotate(RotationX += rotationIncrement, OpenTK.Vector3d.UnitX);
+            if (AutoRotateY) GL.Rotate(RotationY += rotationIncrement, OpenTK.Vector3d.UnitY);
+            if (AutoRotateZ) GL.Rotate(RotationZ += rotationIncrement, OpenTK.Vector3d.UnitZ);
 
             if (RenderableObject != null) RenderableObject.Render();
 
             GL.PopMatrix();
+        }
+
+        public void StoreSettings(System.Xml.XmlDocument doc)
+        {
+            System.Xml.XmlElement element = doc.CreateElement(this.GetType().Name);
+
+            element.SetAttribute("Guid", this.guid.ToString());
+            element.SetAttribute("NodeName", this.NodeName.ToString());
+            element.SetAttribute("Number", this.number.ToString());
+
+            element.SetAttribute("RenderableObject", this.RenderableObject.GetType().FullName);
+
+            element.SetAttribute("RotationX", this.RotationX.ToString());
+            element.SetAttribute("RotationY", this.RotationY.ToString());
+            element.SetAttribute("RotationZ", this.RotationZ.ToString());
+            element.SetAttribute("AutoRotateX", this.AutoRotateX.ToString());
+            element.SetAttribute("AutoRotateY", this.AutoRotateY.ToString());
+            element.SetAttribute("AutoRotateZ", this.AutoRotateZ.ToString());
+
+            element.SetAttribute("ObjectPath", this.ObjectPath.ToString());
+
+            doc.DocumentElement.AppendChild(element);
         }
 
         public void Dispose()

@@ -15,6 +15,7 @@ namespace GLSLTester.Controls.Editors
     internal partial class ShaderEditor : UserControl, IEditorControl
     {
         Shims.ShaderShim parentNode;
+        Shims.ShaderShim originalNode;
         List<Nodes.INode> knownNodes;
 
         static TextStyle styleComments, styleNumbers, styleKeywords1, styleKeywords2, styleKeywords3, styleKeywords4, styleKeywords5, styleKeywords6;
@@ -41,6 +42,7 @@ namespace GLSLTester.Controls.Editors
         public void Initialize(Nodes.INode parentNode, List<Nodes.INode> knownNodes)
         {
             this.parentNode = parentNode as Shims.ShaderShim;
+            this.originalNode = this.parentNode.Clone<Shims.ShaderShim>();
             this.knownNodes = knownNodes;
 
             this.fctbShader.Text = this.parentNode.ShaderString;
@@ -119,6 +121,10 @@ namespace GLSLTester.Controls.Editors
             if (!e.Cancel && this.ParentForm != null && this.ParentForm.DialogResult == DialogResult.OK)
             {
                 e.Cancel = !GLSL.CompileShader(this.parentNode.ShaderType, this.parentNode.ShaderString);
+            }
+            else if (this.ParentForm.DialogResult == DialogResult.Cancel)
+            {
+                GLSL.CompileShader(this.parentNode.ShaderType, this.parentNode.ShaderString);
             }
         }
 

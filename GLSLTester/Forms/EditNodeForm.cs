@@ -21,7 +21,7 @@ namespace GLSLTester.Forms
         {
             InitializeComponent();
 
-            EditNode = editNode;
+            EditNode = editNode.Clone<Nodes.INode>();
 
             lblDescriptionText.Text = EditNode.GetDescription();
             gbNode.Text = EditNode.GetNodeTypeName();

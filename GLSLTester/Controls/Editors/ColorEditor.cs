@@ -12,6 +12,7 @@ namespace GLSLTester.Controls.Editors
     internal partial class ColorEditor : UserControl, IEditorControl
     {
         Nodes.Color parentNode;
+        Nodes.Color originalNode;
         List<Nodes.INode> knownNodes;
 
         public ColorEditor()
@@ -22,6 +23,7 @@ namespace GLSLTester.Controls.Editors
         public void Initialize(Nodes.INode parentNode, List<Nodes.INode> knownNodes)
         {
             this.parentNode = parentNode as Nodes.Color;
+            this.originalNode = this.parentNode.Clone<Nodes.Color>();
             this.knownNodes = knownNodes;
 
             this.txtNodeName.Text = this.parentNode.NodeName;
@@ -49,7 +51,7 @@ namespace GLSLTester.Controls.Editors
         {
             if (knownNodes == null) return true;
 
-            bool invalidName = (knownNodes.FirstOrDefault(x => x.GetNodeInstanceName() == this.parentNode.NodeName && x.GetHashCode() != this.parentNode.GetHashCode()) != null);
+            bool invalidName = (knownNodes.FirstOrDefault(x => x.GetNodeInstanceName() == this.originalNode.NodeName && x.GetGuid() != this.originalNode.GetGuid()) != null);
 
             if (invalidName)
             {

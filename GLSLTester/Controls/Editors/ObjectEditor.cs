@@ -12,6 +12,7 @@ namespace GLSLTester.Controls.Editors
     internal partial class ObjectEditor : UserControl, IEditorControl
     {
         Nodes.Object parentNode;
+        Nodes.Object originalNode;
         List<Nodes.INode> knownNodes;
 
         List<ObjectTypeEntry> objectTypes;
@@ -47,6 +48,7 @@ namespace GLSLTester.Controls.Editors
         public void Initialize(Nodes.INode parentNode, List<Nodes.INode> knownNodes)
         {
             this.parentNode = parentNode as Nodes.Object;
+            this.originalNode = this.parentNode.Clone<Nodes.Object>();
             this.knownNodes = knownNodes;
 
             this.txtObjectName.Text = this.parentNode.NodeName;
@@ -56,9 +58,9 @@ namespace GLSLTester.Controls.Editors
             else
                 this.cmbObjectType.SelectedIndex = 0;
 
-            this.chkRotateX.Checked = this.parentNode.AutoRotate[0];
-            this.chkRotateY.Checked = this.parentNode.AutoRotate[1];
-            this.chkRotateX.Checked = this.parentNode.AutoRotate[2];
+            this.chkRotateX.Checked = this.parentNode.AutoRotateX;
+            this.chkRotateY.Checked = this.parentNode.AutoRotateY;
+            this.chkRotateX.Checked = this.parentNode.AutoRotateZ;
 
             otEntry = (this.cmbObjectType.SelectedItem as ObjectTypeEntry);
             this.lblObjectPath.Enabled = this.txtObjectPath.Enabled = this.btnObjectBrowse.Enabled = otEntry.RequiresPath;
@@ -103,9 +105,9 @@ namespace GLSLTester.Controls.Editors
 
         private bool AreEditsValid()
         {
-            if (knownNodes == null) return true;
+            if (knownNodes == null || this.ParentForm.DialogResult == DialogResult.None) return true;
 
-            bool invalidName = (knownNodes.FirstOrDefault(x => x.GetNodeInstanceName() == this.parentNode.NodeName && x.GetHashCode() != this.parentNode.GetHashCode()) != null);
+            bool invalidName = (knownNodes.FirstOrDefault(x => x.GetNodeInstanceName() == this.originalNode.NodeName && x.GetGuid() != this.originalNode.GetGuid()) != null);
             bool missingPath = (otEntry != null && (otEntry.RequiresPath && (this.txtObjectPath.Text == string.Empty || !System.IO.File.Exists(this.txtObjectPath.Text))));
 
             if (invalidName)
@@ -144,20 +146,20 @@ namespace GLSLTester.Controls.Editors
 
         private void chkRotateX_CheckedChanged(object sender, EventArgs e)
         {
-            this.parentNode.AutoRotate[0] = (sender as CheckBox).Checked;
-            if (this.parentNode.AutoRotate[0]) this.parentNode.Rotation[0] = 0.0;
+            this.parentNode.AutoRotateX = (sender as CheckBox).Checked;
+            if (this.parentNode.AutoRotateX) this.parentNode.RotationX = 0.0;
         }
 
         private void chkRotateY_CheckedChanged(object sender, EventArgs e)
         {
-            this.parentNode.AutoRotate[1] = (sender as CheckBox).Checked;
-            if (this.parentNode.AutoRotate[1]) this.parentNode.Rotation[1] = 0.0;
+            this.parentNode.AutoRotateY = (sender as CheckBox).Checked;
+            if (this.parentNode.AutoRotateY) this.parentNode.RotationY = 0.0;
         }
 
         private void chkRotateZ_CheckedChanged(object sender, EventArgs e)
         {
-            this.parentNode.AutoRotate[2] = (sender as CheckBox).Checked;
-            if (this.parentNode.AutoRotate[2]) this.parentNode.Rotation[2] = 0.0;
+            this.parentNode.AutoRotateZ = (sender as CheckBox).Checked;
+            if (this.parentNode.AutoRotateZ) this.parentNode.RotationZ = 0.0;
         }
 
         private void txtObjectPath_TextChanged(object sender, EventArgs e)
