@@ -6,12 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
-using System.IO;
 
 using OpenTK.Graphics.OpenGL;
 
-using GLSLTester.Objects;
 using GLSLTester.Controls;
 
 namespace GLSLTester

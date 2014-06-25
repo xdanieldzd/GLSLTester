@@ -10,10 +10,8 @@ namespace GLSLTester.Nodes
     [DisplayOrderAttribute(3), ExecutionOrderAttribute(0), Serializable()]
     class Texture : INode
     {
-        [NonSerialized()]
         public static int MaxTextureUnits = Aglex.Toolkit.GetInteger(GetPName.MaxTextureUnits);
 
-        [NonSerialized()]
         Controls.Editors.TextureEditor editor;
 
         string defaultName;
@@ -24,7 +22,6 @@ namespace GLSLTester.Nodes
         public string TexturePath { get; set; }
         public int TextureUnit { get; set; }
 
-        [NonSerialized()]
         Aglex.Texture texture;
 
         public Texture()

@@ -5,7 +5,6 @@ using System.Text;
 
 namespace GLSLTester.Shims
 {
-    [Serializable()]
     class ShaderShim
     {
         public OpenTK.Graphics.OpenGL.ShaderType ShaderType { get; set; }

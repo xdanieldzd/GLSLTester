@@ -10,7 +10,6 @@ namespace GLSLTester.Nodes
     [DisplayOrderAttribute(4), ExecutionOrderAttribute(0), Serializable()]
     class Color : INode
     {
-        [NonSerialized()]
         Controls.Editors.ColorEditor editor;
 
         string defaultName;

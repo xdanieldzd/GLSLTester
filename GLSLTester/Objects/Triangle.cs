@@ -28,7 +28,6 @@ namespace GLSLTester.Objects
             get { return new uint[] { 0, 1, 2 }; }
         }
 
-        [NonSerialized()]
         internal VertexBuffer vertexBuffer;
 
         public Triangle()

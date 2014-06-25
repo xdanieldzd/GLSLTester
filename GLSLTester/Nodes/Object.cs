@@ -11,7 +11,6 @@ namespace GLSLTester.Nodes
     [DisplayOrderAttribute(2), ExecutionOrderAttribute(int.MaxValue), Serializable()]
     class Object : INode
     {
-        [NonSerialized()]
         Controls.Editors.ObjectEditor editor;
 
         string defaultName;

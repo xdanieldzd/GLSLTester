@@ -10,7 +10,6 @@ namespace GLSLTester.Nodes
     [DisplayOrderAttribute(0), ExecutionOrderAttribute(int.MinValue), SerializableAttribute()]
     class VertexShader : Shims.ShaderShim, INode
     {
-        [NonSerialized()]
         Controls.Editors.ShaderEditor editor;
 
         Guid guid;

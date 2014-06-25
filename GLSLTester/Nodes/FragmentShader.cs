@@ -10,7 +10,6 @@ namespace GLSLTester.Nodes
     [DisplayOrderAttribute(1), ExecutionOrderAttribute(int.MinValue), IsNextSeparatorAttribute(true), Serializable()]
     class FragmentShader : Shims.ShaderShim, INode
     {
-        [NonSerialized()]
         Controls.Editors.ShaderEditor editor;
 
         Guid guid;
