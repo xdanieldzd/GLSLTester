@@ -105,7 +105,7 @@ namespace GLSLTester.Controls.Editors
 
         private bool AreEditsValid()
         {
-            if (knownNodes == null || this.ParentForm.DialogResult == DialogResult.None) return true;
+            if (knownNodes == null || (this.ParentForm != null && this.ParentForm.DialogResult == DialogResult.None)) return true;
 
             bool invalidName = (knownNodes.FirstOrDefault(x => x.GetNodeInstanceName() == this.originalNode.NodeName && x.GetGuid() != this.originalNode.GetGuid()) != null);
             bool missingPath = (otEntry != null && (otEntry.RequiresPath && (this.txtObjectPath.Text == string.Empty || !System.IO.File.Exists(this.txtObjectPath.Text))));

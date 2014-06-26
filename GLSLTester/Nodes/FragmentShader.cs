@@ -23,7 +23,7 @@ namespace GLSLTester.Nodes
 
             guid = Guid.NewGuid();
 
-            GLSL.CompileShader(ShaderType, ShaderString);
+            //GLSL.CompileShader(ShaderType, ShaderString);
         }
 
         public FragmentShader(System.Xml.XmlElement element)

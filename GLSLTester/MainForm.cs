@@ -32,6 +32,21 @@ namespace GLSLTester
             ofdOpenWorkspace.Filter = sfdSaveWorkspace.Filter = string.Format("{0} Workspace Files (*.xml)|*.xml|All Files (*.*)|*.*", Application.ProductName);
         }
 
+        private void MainForm_Activated(object sender, EventArgs e)
+        {
+            Program.Stopwatch.Restart();
+        }
+
+        private void MainForm_Deactivate(object sender, EventArgs e)
+        {
+            Program.Stopwatch.Stop();
+        }
+
+        private void MainForm_Move(object sender, EventArgs e)
+        {
+            Program.Stopwatch.Stop();
+        }
+
         private void glControl1_Load(object sender, EventArgs e)
         {
             GL.Enable(EnableCap.DepthTest);
@@ -66,8 +81,7 @@ namespace GLSLTester
             Program.Stopwatch.Stop();
             Program.Elapsed = Program.Stopwatch.ElapsedTicks;
             tsslStatus.Text = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.00} FPS", (sender as Aglex.GLControl).FPS);
-            Program.Stopwatch.Reset();
-            Program.Stopwatch.Start();
+            Program.Stopwatch.Restart();
         }
 
         private void newWorkspaceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -99,6 +113,9 @@ namespace GLSLTester
         private void vSyncToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Configuration.VSync = glControl1.VSync = (sender as ToolStripMenuItem).Checked;
+
+            Program.Stopwatch.Restart();
+            Program.Elapsed = 0;
         }
 
         private void openGLInformationToolStripMenuItem_Click(object sender, EventArgs e)

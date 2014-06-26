@@ -96,6 +96,8 @@ namespace GLSLTester
             KnownNodes.AddRange(defaultNodes);
 
             RecreateWorkspaceRoot();
+
+            UpdateShaders();
         }
 
         public void ExecuteNodes()

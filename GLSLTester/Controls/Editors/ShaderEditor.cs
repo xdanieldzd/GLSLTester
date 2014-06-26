@@ -122,7 +122,7 @@ namespace GLSLTester.Controls.Editors
             {
                 e.Cancel = !GLSL.CompileShader(this.parentNode.ShaderType, this.parentNode.ShaderString);
             }
-            else if (this.ParentForm.DialogResult == DialogResult.Cancel)
+            else if (this.ParentForm != null && this.ParentForm.DialogResult == DialogResult.Cancel)
             {
                 GLSL.CompileShader(this.parentNode.ShaderType, this.parentNode.ShaderString);
             }

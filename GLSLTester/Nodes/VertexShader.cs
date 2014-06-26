@@ -23,7 +23,7 @@ namespace GLSLTester.Nodes
 
             guid = Guid.NewGuid();
 
-            GLSL.CompileShader(ShaderType, ShaderString);
+            //GLSL.CompileShader(ShaderType, ShaderString);
         }
 
         public VertexShader(System.Xml.XmlElement element)
@@ -44,7 +44,7 @@ namespace GLSLTester.Nodes
 
             guid = Guid.NewGuid();
 
-            GLSL.CompileShader(ShaderType, ShaderString);
+            //GLSL.CompileShader(ShaderType, ShaderString);
         }
 
         public Guid GetGuid() { return guid; }
