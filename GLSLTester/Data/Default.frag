@@ -1,12 +1,12 @@
-﻿#version 330 compatibility
+﻿#version 150
 
 in vec4 fragmentColor;
 in vec2 fragmentTextureCoord;
 
 out vec4 color;
 
-varying vec4 diffuse, ambient;
-varying vec3 normal, halfVector;
+in vec4 diffuse, ambient;
+in vec3 normal, halfVector;
 
 uniform sampler2D textureMap0;
 uniform int passNumber;

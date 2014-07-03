@@ -1,4 +1,5 @@
-﻿#version 330 compatibility
+﻿#version 150
+#extension GL_ARB_separate_shader_objects : require
 
 layout(location = 0) in vec3 vertexPosition;
 layout(location = 1) in vec2 vertexTextureCoord;
@@ -8,8 +9,8 @@ layout(location = 3) in vec3 vertexNormal;
 out vec4 fragmentColor;
 out vec2 fragmentTextureCoord;
 
-varying vec4 diffuse, ambient;
-varying vec3 normal, halfVector;
+out vec4 diffuse, ambient;
+out vec3 normal, halfVector;
 
 uniform int passNumber;
 
